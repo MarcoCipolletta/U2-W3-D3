@@ -1,4 +1,5 @@
 const booksRow = document.getElementById("booksRow");
+const shoppingCart = [];
 
 const getBooks = function () {
   fetch("https://striveschool-api.herokuapp.com/books")
@@ -44,7 +45,38 @@ const getBooks = function () {
         buyNow.classList.add("btn", "btn-primary");
         buyNow.innerText = "Compra ora";
         buyNow.addEventListener("click", (e) => {
-          console.log(e.target.parentElement.parentElement.parentElement);
+          shoppingCart.push(book);
+          const offCart = document.getElementById("offCart");
+          offCart.innerHTML = "";
+          shoppingCart.forEach((cartBook) => {
+            offCart.innerHTML += `
+    <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <div>
+                    <img
+                      src="${cartBook.img}"
+                      class="img-fluid rounded-3"
+                      alt="Shopping item"
+                      style="width: 100px"
+                    />
+                  </div>
+                  <div class="ms-3">
+                    <h5>${cartBook.title}</h5>
+                  </div>
+                </div>
+                <div class="d-flex flex-row align-items-center">
+                  <div style="width: 80px">
+                    <h5 class="mb-0">${cartBook.price}€</h5>
+                  </div>
+                  <a href="#!" style="color: #000000" onclick="cancItem(event)"><i class="bi bi-trash"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+    `;
+          });
         });
 
         discard.href = "#";
@@ -68,3 +100,7 @@ const getBooks = function () {
 };
 
 getBooks();
+
+const cancItem = (e) => {
+  e.target.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
+};
