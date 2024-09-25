@@ -46,6 +46,16 @@ const getBooks = function () {
         buyNow.innerText = "Compra ora";
         buyNow.addEventListener("click", (e) => {
           shoppingCart.push(book);
+
+          localStorage.setItem("cartArray", JSON.stringify(shoppingCart));
+
+          const cartAmount = document.getElementById("cartAmount");
+
+          if (shoppingCart.length > 0) {
+            cartAmount.classList.remove("d-none");
+            cartAmount.innerText = shoppingCart.length;
+          }
+
           const offCart = document.getElementById("offCart");
           offCart.innerHTML = "";
           shoppingCart.forEach((cartBook) => {
@@ -70,7 +80,7 @@ const getBooks = function () {
                   <div style="width: 80px">
                     <h5 class="mb-0">${cartBook.price}€</h5>
                   </div>
-                  <a href="#!" style="color: #000000" onclick="cancItem(event)"><i class="bi bi-trash"></i></a>
+                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.title}')"><i class="bi bi-trash"></i></a>
                 </div>
               </div>
             </div>
@@ -101,6 +111,69 @@ const getBooks = function () {
 
 getBooks();
 
-const cancItem = (e) => {
+const cancItem = (e, title) => {
   e.target.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
+
+  const itemToRemove = shoppingCart.find((book) => book.title === title);
+  if (itemToRemove) {
+    shoppingCart.splice(shoppingCart.indexOf(itemToRemove), 1);
+    console.log(shoppingCart);
+  }
+  localStorage.setItem("cartArray", JSON.stringify(shoppingCart));
+
+  if (shoppingCart.length > 0) {
+    cartAmount.classList.remove("d-none");
+    cartAmount.innerText = shoppingCart.length;
+  } else {
+    cartAmount.classList.add("d-none");
+  }
 };
+
+const loadCart = () => {
+  const newArrbook = JSON.parse(localStorage.getItem("cartArray"));
+  if (newArrbook) {
+    newArrbook.forEach((savedBook) => {
+      shoppingCart.push(savedBook);
+    });
+  }
+  const cartAmount = document.getElementById("cartAmount");
+
+  if (shoppingCart.length > 0) {
+    cartAmount.classList.remove("d-none");
+    cartAmount.innerText = shoppingCart.length;
+  }
+
+  const offCart = document.getElementById("offCart");
+  offCart.innerHTML = "";
+  shoppingCart.forEach((cartBook) => {
+    offCart.innerHTML += `
+    <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <div>
+                    <img
+                      src="${cartBook.img}"
+                      class="img-fluid rounded-3"
+                      alt="Shopping item"
+                      style="width: 100px"
+                    />
+                  </div>
+                  <div class="ms-3">
+                    <h5>${cartBook.title}</h5>
+                  </div>
+                </div>
+                <div class="d-flex flex-row align-items-center">
+                  <div style="width: 80px">
+                    <h5 class="mb-0">${cartBook.price}€</h5>
+                  </div>
+                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.title}')"><i class="bi bi-trash"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+    `;
+  });
+};
+
+loadCart();
