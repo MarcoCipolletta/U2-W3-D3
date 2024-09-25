@@ -11,7 +11,7 @@ const getBooks = function () {
       }
     })
     .then((books) => {
-      console.log(books);
+      document.querySelector("body").classList.remove("d-none");
       books.forEach((book) => {
         const col = document.createElement("div");
         col.classList.add("col", "d-flex", "justify-content-center");
@@ -41,7 +41,7 @@ const getBooks = function () {
         const buyNow = document.createElement("a");
         const discard = document.createElement("a");
 
-        buyNow.href = "#";
+        buyNow.href = "#!";
         buyNow.classList.add("btn", "btn-primary");
         buyNow.innerText = "Compra ora";
         buyNow.addEventListener("click", (e) => {
@@ -67,20 +67,20 @@ const getBooks = function () {
                   <div>
                     <img
                       src="${cartBook.img}"
-                      class="img-fluid rounded-3"
+                      class="rounded-3"
                       alt="Shopping item"
-                      style="width: 100px"
+                      style="width: 50px"
                     />
                   </div>
                   <div class="ms-3">
-                    <h5>${cartBook.title}</h5>
+                  <h5 class="text-truncate" style="width: 150px" >${cartBook.title}</h5>
                   </div>
                 </div>
                 <div class="d-flex flex-row align-items-center">
                   <div style="width: 80px">
                     <h5 class="mb-0">${cartBook.price}€</h5>
                   </div>
-                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.title}')"><i class="bi bi-trash"></i></a>
+                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.asin}')"><i class="bi bi-trash"></i></a>
                 </div>
               </div>
             </div>
@@ -89,11 +89,10 @@ const getBooks = function () {
           });
         });
 
-        discard.href = "#";
+        discard.href = "#!";
         discard.classList.add("btn", "btn-danger");
         discard.innerText = "Scarta";
         discard.addEventListener("click", (e) => {
-          console.log(e.target.parentElement.parentElement.parentElement);
           e.target.parentElement.parentElement.parentElement.remove();
         });
 
@@ -111,10 +110,10 @@ const getBooks = function () {
 
 getBooks();
 
-const cancItem = (e, title) => {
+const cancItem = (e, asin) => {
   e.target.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
 
-  const itemToRemove = shoppingCart.find((book) => book.title === title);
+  const itemToRemove = shoppingCart.find((book) => book.asin === asin);
   if (itemToRemove) {
     shoppingCart.splice(shoppingCart.indexOf(itemToRemove), 1);
     console.log(shoppingCart);
@@ -154,20 +153,20 @@ const loadCart = () => {
                   <div>
                     <img
                       src="${cartBook.img}"
-                      class="img-fluid rounded-3"
+                      class="rounded-3"
                       alt="Shopping item"
-                      style="width: 100px"
+                      style="width: 50px"
                     />
                   </div>
                   <div class="ms-3">
-                    <h5>${cartBook.title}</h5>
+                    <h5 class="text-truncate" style="width: 150px">${cartBook.title}</h5>
                   </div>
                 </div>
                 <div class="d-flex flex-row align-items-center">
                   <div style="width: 80px">
                     <h5 class="mb-0">${cartBook.price}€</h5>
                   </div>
-                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.title}')"><i class="bi bi-trash"></i></a>
+                  <a href="#!" style="color: #000000" onclick="cancItem(event, '${cartBook.asin}')"><i class="bi bi-trash"></i></a>
                 </div>
               </div>
             </div>
